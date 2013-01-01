@@ -21,40 +21,40 @@ document.addEventListener('DOMContentLoaded', function(){
   
   //do paint
   var dotPaint = new DotPaint({
-  	canvasId: 'freeCanvas',
-  	dotR: 6
- 	});
+    canvasId: 'freeCanvas',
+    dotR: 6
+   });
   dotPaint.init();
 
   for(var i=300; i>0; i =i-dotPaint.dotR*2) {
-		if(i > 250) {
-			dotPaint.setDotR(10);
-		} else if(i > 170) {
-			dotPaint.setDotR(6);
-		} else if(i > 100) {
-			dotPaint.setDotR(4);
-		}
-		var randomColorLine = (Math.floor(Math.random() * 0xffffff.toString(10))).toString(16);
-		//paintCircle
+    if(i > 250) {
+      dotPaint.setDotR(10);
+    } else if(i > 170) {
+      dotPaint.setDotR(6);
+    } else if(i > 100) {
+      dotPaint.setDotR(4);
+    }
+    var randomColorLine = (Math.floor(Math.random() * 0xffffff.toString(10))).toString(16);
+    //paintCircle
     dotPaint.paintCircle({
-    	r:i,
-    	a:400,
-    	b:400,
-    	color:randomColorLine,
-    	//cntMax:500
+      r:i,
+      a:400,
+      b:400,
+      color:randomColorLine,
+      //cntMax:500
     });
 
-		var randomColorDot = (Math.floor(Math.random() * 0xffffff.toString(10))).toString(16);
-		//paintCircleNoPile: 重なりなしのドット円
-		dotPaint.paintCircleNoPile({
-			r:i,
-			a:400,
-			b:400,
-			color:randomColorDot,
-			//cntMax:1000,
-			loopTime:2
-		});
-	}
+    var randomColorDot = (Math.floor(Math.random() * 0xffffff.toString(10))).toString(16);
+    //paintCircleNoPile: 重なりなしのドット円
+    dotPaint.paintCircleNoPile({
+      r:i,
+      a:400,
+      b:400,
+      color:randomColorDot,
+      //cntMax:1000,
+      loopTime:2
+    });
+  }
 
   //fileDrop test
   var fileDrop = new FileDrop('fileReader','drop');
@@ -65,16 +65,16 @@ document.addEventListener('DOMContentLoaded', function(){
     var imageHeight = fileDrop.imageHeight;
     fileDrop.closeWindow();
 
-   	dotPaint.paintImagedataRandom({
-			imagedata:imagedata,
-			imageW:imageWidth,
-			imageH:imageHeight,
-			startX:200,
-			startY:200,
-			loopTime:1
-		});
+     dotPaint.paintImagedataRandom({
+      imagedata:imagedata,
+      imageW:imageWidth,
+      imageH:imageHeight,
+      startX:200,
+      startY:200,
+      loopTime:1
+    });
 
-	});
+  });
   //fileDrop.closeWindow();  
 
 }, false);
@@ -111,21 +111,21 @@ FileDrop.prototype = {
     var self = this;
 
     if(!isResize) {
-	    //背景領域
-	    this.el.bg = this.el.fileReader.querySelector('.bg');    
-	    //drop領域
-	    this.el.dropArea = this.el.fileReader.querySelector('.dropArea');
-	    
-	    this.el.drop.addEventListener('dragover',function(e) {
-	      e.preventDefault();
-	    },false);
-	    
-	    this.el.drop.addEventListener('drop',function(e) {
-	      e.preventDefault();
-	      self.fileDroped(e, callback);
-	    },false);
+      //背景領域
+      this.el.bg = this.el.fileReader.querySelector('.bg');    
+      //drop領域
+      this.el.dropArea = this.el.fileReader.querySelector('.dropArea');
+      
+      this.el.drop.addEventListener('dragover',function(e) {
+        e.preventDefault();
+      },false);
+      
+      this.el.drop.addEventListener('drop',function(e) {
+        e.preventDefault();
+        self.fileDroped(e, callback);
+      },false);
 
-	    self.onWindowResize();
+      self.onWindowResize();
 
     }
 
@@ -297,8 +297,8 @@ FreeCanvas.prototype = {
 * DotPaintクラス
 */
 window.DotPaint = function(/*{
-	canvasId: cnavasId,
-	dotR: dotR
+  canvasId: cnavasId,
+  dotR: dotR
 }*/){
 
   this.el = {};
@@ -324,95 +324,95 @@ DotPaint.prototype = {
     //アボリジナルの4色セット
     var naitureColors = ['#000','#fff','#B72914','#ffcc66'];
 
-		//paintFree
+    //paintFree
     // dotPaint.paintFree({
-    // 	cntMax:500, 
-    // 	colors:naitureColors,
-    // 	loopTime: 1
+    //   cntMax:500, 
+    //   colors:naitureColors,
+    //   loopTime: 1
     // });
 
     //painFreeOnGuide
     // dotPaint.paintFreeOnGuide({
-    // 	cntMax:1000, 
-    // 	colors:naitureColors,
-    // 	loopTime: 1
+    //   cntMax:1000, 
+    //   colors:naitureColors,
+    //   loopTime: 1
     // });
 
     //paintFillOnGuide
     dotPaint.paintFillOnGuide({ 
-    	colors:naitureColors,
-    	//cntMax:1000,
-    	loopTime: 1
+      colors:naitureColors,
+      //cntMax:1000,
+      loopTime: 1
     });
 
     //paintCircle
     // dotPaint.paintCircle({
-    // 	r:200,
-    // 	a:200,
-    // 	b:300,
-    // 	color:'#B72914',
-    // 	//cntMax:500
+    //   r:200,
+    //   a:200,
+    //   b:300,
+    //   color:'#B72914',
+    //   //cntMax:500
     // });
 
-		//paintCircleNoPile: 重なりなしのドット円
-		// dotPaint.paintCircleNoPile({
-		// 	r:100,
-		// 	a:200,
-		// 	b:100,
-		// 	color:'#B72914',
-		// 	//cntMax:1000,
-		// 	loopTime:1
-		// });
+    //paintCircleNoPile: 重なりなしのドット円
+    // dotPaint.paintCircleNoPile({
+    //   r:100,
+    //   a:200,
+    //   b:100,
+    //   color:'#B72914',
+    //   //cntMax:1000,
+    //   loopTime:1
+    // });
 
-		//paintCircleOnGuide: ガイド上に円を描く
-		// dotPaint.paintCircleOnGuide({
-		// 	r:300,
-		// 	a:200,
-		// 	b:200,
-		// 	color:'#B72914',
-		// 	//cntMax:1000,
-		// 	loopTime:1
-		// });
+    //paintCircleOnGuide: ガイド上に円を描く
+    // dotPaint.paintCircleOnGuide({
+    //   r:300,
+    //   a:200,
+    //   b:200,
+    //   color:'#B72914',
+    //   //cntMax:1000,
+    //   loopTime:1
+    // });
 
-		//paintImagedata: canvas imagedataをもとにドット絵を描く
-		// dotPaint.paintImagedata({
-		// 	imagedata:imagedata,
-		// 	imageW:imageWidth,
-		// 	imageH:imageHeight,
-		// 	startX:0,
-		// 	startY:0,
-		// 	loopTime:1
-		// });
+    //paintImagedata: canvas imagedataをもとにドット絵を描く
+    // dotPaint.paintImagedata({
+    //   imagedata:imagedata,
+    //   imageW:imageWidth,
+    //   imageH:imageHeight,
+    //   startX:0,
+    //   startY:0,
+    //   loopTime:1
+    // });
 
-		//paintImagedataRandom: canvas imagedataをもとにドット絵を描く(ランダム)
-		// dotPaint.paintImagedataRandom({
-		// 	imagedata:imagedata,
-		// 	imageW:imageWidth,
-		// 	imageH:imageHeight,
-		// 	startX:200,
-		// 	startY:200,
-		// 	loopTime:1
-		// });
+    //paintImagedataRandom: canvas imagedataをもとにドット絵を描く(ランダム)
+    // dotPaint.paintImagedataRandom({
+    //   imagedata:imagedata,
+    //   imageW:imageWidth,
+    //   imageH:imageHeight,
+    //   startX:200,
+    //   startY:200,
+    //   loopTime:1
+    // });
 
-		//paintSquare
-		// dotPaint.paintSquare({
-		// 	startX:100,
-		// 	startY:100,
-		// 	topLength:200,
-		// 	leftLength:300,
-		// 	color:'#fff',
-		// 	loopTime:5
-		// });
+    //paintSquare
+    // dotPaint.paintSquare({
+    //   startX:100,
+    //   startY:100,
+    //   topLength:200,
+    //   leftLength:300,
+    //   color:'#fff',
+    //   loopTime:5
+    // });
 
-		//paintSquareOnGuide
-		// dotPaint.paintSquareOnGuide({
-		// 	startX:100,
-		// 	startY:100,
-		// 	topLength:500,
-		// 	leftLength:300,
-		// 	color:'#fff',
-		// 	loopTime:5
-		// });
+    //paintSquareOnGuide
+    // dotPaint.paintSquareOnGuide({
+    //   startX:100,
+    //   startY:100,
+    //   topLength:500,
+    //   leftLength:300,
+    //   color:'#fff',
+    //   loopTime:5
+    // });
 
   },
   
@@ -421,13 +421,13 @@ DotPaint.prototype = {
   },
   
   setDotR: function(val) {
-  	this.dotR = val;
+    this.dotR = val;
   },
 
   // ↓y →x
   createGuide: function() {
     var center = [], tmpCenter = [],
-    		i = 0, j = 0;
+        i = 0, j = 0;
     
     for(var centerX = this.dotR; centerX <= this.canvasH; centerX += this.dotR*2) {//↓y
       for(var centerY = this.dotR; centerY < this.canvasW; centerY += this.dotR*2) {//→x
@@ -450,15 +450,15 @@ DotPaint.prototype = {
   },
 
   paintFree: function(/*{cntMax:cntMax, colors:colors, [loopTime: loopTime]}*/) {
-  	var self = this;
-  	var cntMax = arguments[0].cntMax,
-    		colors = arguments[0].colors,
-    		loopTime = arguments[0].loopTime || 1;
-  	var timerId = [],
-    		cnt = 0;
+    var self = this;
+    var cntMax = arguments[0].cntMax,
+        colors = arguments[0].colors,
+        loopTime = arguments[0].loopTime || 1;
+    var timerId = [],
+        cnt = 0;
 
     function paint() {
-    	//colorsで指定した色が均等になるようcolors[cnt%colors.length]
+      //colorsで指定した色が均等になるようcolors[cnt%colors.length]
       self.drawDot(Math.floor(Math.random() * self.canvasW), Math.floor(Math.random() * self.canvasH), self.dotR, colors[cnt%colors.length]);  
       cnt++;
 
@@ -472,20 +472,20 @@ DotPaint.prototype = {
   },
   
   paintFreeOnGuide: function(/*{cntMax:cntMax, colors:colors, [loopTime: loopTime]}*/) {
-		var self = this;
-		var cntMax = arguments[0].cntMax,
-    		colors = arguments[0].colors,
-    		loopTime = arguments[0].loopTime || 1;
-  	var timerId = [],
-    		cnt = 0;
+    var self = this;
+    var cntMax = arguments[0].cntMax,
+        colors = arguments[0].colors,
+        loopTime = arguments[0].loopTime || 1;
+    var timerId = [],
+        cnt = 0;
 
     function paint() {
       var randX = Math.floor(Math.random() * self.guide.length);
       var randY = Math.floor(Math.random() * self.guide[0].length);
 
       if(randX > -1 && randY > -1 && randX < self.guide.length && randY < self.guide[0].length) {
-	      self.drawDot(self.guide[randX][randY].x, self.guide[randX][randY].y, self.dotR, colors[cnt%colors.length]); 
-	    }
+        self.drawDot(self.guide[randX][randY].x, self.guide[randX][randY].y, self.dotR, colors[cnt%colors.length]); 
+      }
       cnt++;
       
       if(cnt <= cntMax) {
@@ -498,12 +498,12 @@ DotPaint.prototype = {
   },
   
   paintFillOnGuide: function(/*{colors:colors, [cntMax:cntMax], [loopTime:loopTime]}*/) {
-  	var self = this;
+    var self = this;
     var colors = arguments[0].colors,
-   		 	cntMax = arguments[0].cntMax && self.guide.length * self.guide[0].length > arguments[0].cntMax ? arguments[0].cntMax : self.guide.length * self.guide[0].length,
-    		loopTime = arguments[0].loopTime || 1;
-  	var	timerId = [],
-    		cnt = 0, x = -1, y = 0;
+          cntMax = arguments[0].cntMax && self.guide.length * self.guide[0].length > arguments[0].cntMax ? arguments[0].cntMax : self.guide.length * self.guide[0].length,
+        loopTime = arguments[0].loopTime || 1;
+    var  timerId = [],
+        cnt = 0, x = -1, y = 0;
 
     function paint() {
       if(x < self.guide.length-1) {
@@ -514,7 +514,7 @@ DotPaint.prototype = {
       }
       
       if(x > -1 && y > -1 && x < self.guide.length && y < self.guide[0].length) {
-      	self.drawDot(self.guide[x][y].x, self.guide[x][y].y, self.dotR, colors[cnt%colors.length]);
+        self.drawDot(self.guide[x][y].x, self.guide[x][y].y, self.dotR, colors[cnt%colors.length]);
       }
       cnt++;
       
@@ -528,22 +528,22 @@ DotPaint.prototype = {
   },
   
   paintCircle: function (/*{[r:r], [a:a], [b:b], color:color, [cntMax:cntMax]}*/) {
-  	var self = this;
-  	var r = arguments[0].r || 200,
-    		a = arguments[0].a || 0,
-    		b = arguments[0].b || 0,
-    		cntMax = arguments[0].cntMax && arguments[0].cntMax < r*2 ? arguments[0].cntMax : r*2,
-    		color = arguments[0].color;
-  	var	timerId = [],
-    		cnt = 0,
-    		x1 = a-r-1,
-    		y2 = b-r-1;
+    var self = this;
+    var r = arguments[0].r || 200,
+        a = arguments[0].a || 0,
+        b = arguments[0].b || 0,
+        cntMax = arguments[0].cntMax && arguments[0].cntMax < r*2 ? arguments[0].cntMax : r*2,
+        color = arguments[0].color;
+    var  timerId = [],
+        cnt = 0,
+        x1 = a-r-1,
+        y2 = b-r-1;
     
     for(cnt=0;cnt <= cntMax; cnt++) {
       x1++;//→x
       //左の半円,右の半円
       var y1_1 = -Math.sqrt(r*r - (x1-a)*(x1-a)) + b,
-      		y1_2 = Math.sqrt(r*r - (x1-a)*(x1-a)) + b;
+          y1_2 = Math.sqrt(r*r - (x1-a)*(x1-a)) + b;
       if(!isNaN(x1) && !isNaN(y1_1) && !isNaN(y1_2)){
         self.drawDot(x1,y1_1,self.dotR,color);
         self.drawDot(x1,y1_2,self.dotR,color);
@@ -555,7 +555,7 @@ DotPaint.prototype = {
       y2++;//↓y
       //上の半円,下の半円
       var x2_1 = -Math.sqrt(r*r - (y2-b)*(y2-b)) + a,
-      		x2_2 = Math.sqrt(r*r - (y2-b)*(y2-b)) + a;
+          x2_2 = Math.sqrt(r*r - (y2-b)*(y2-b)) + a;
       if(!isNaN(x2_1) && !isNaN(x2_2) && !isNaN(y2)){
         self.drawDot(x2_1,y2,self.dotR,color);
         self.drawDot(x2_2,y2,self.dotR,color);
@@ -565,15 +565,15 @@ DotPaint.prototype = {
   },
   
   paintCircleNoPile: function (/*{[r:r], [a:a], [b:b], color:color, [cntMax:cntMax], [loopTime:loopTime]}*/) {
-  	var self = this;
-  	var r = arguments[0].r || 200,
-    		a = arguments[0].a || 0,
-    		b = arguments[0].b || 0,
-    		color = arguments[0].color,
-    		cntMax = arguments[0].cntMax,
-    		loopTime = arguments[0].loopTime || 1;
-  	var timerId = [],
-    		cnt = 0;
+    var self = this;
+    var r = arguments[0].r || 200,
+        a = arguments[0].a || 0,
+        b = arguments[0].b || 0,
+        color = arguments[0].color,
+        cntMax = arguments[0].cntMax,
+        loopTime = arguments[0].loopTime || 1;
+    var timerId = [],
+        cnt = 0;
     
     //ロジック：
     //円の内側にちょうど収まる正方形を求め、
@@ -582,26 +582,26 @@ DotPaint.prototype = {
     
     //正方形の各辺の長さ
     var sqTop = r*Math.sin(45*Math.PI/180)*2,
-    		sqLeft = r*Math.cos(45*Math.PI/180)*2;
+        sqLeft = r*Math.cos(45*Math.PI/180)*2;
 
     //stop max val
     cntMax = cntMax && cntMax > sqTop ? cntMax : sqTop;
 
     //各点の座標[x,y]
     var sqMatrix1 = {x:a-sqTop/2,y:b-sqLeft/2},//左上
-    		sqMatrix2 = {x:a+sqTop/2,y:b-sqLeft/2},//右上
-    		sqMatrix3 = {x:a+sqTop/2,y:b+sqLeft/2},//右下
-    		sqMatrix4 = {x:a-sqTop/2,y:b+sqLeft/2};//左下
+        sqMatrix2 = {x:a+sqTop/2,y:b-sqLeft/2},//右上
+        sqMatrix3 = {x:a+sqTop/2,y:b+sqLeft/2},//右下
+        sqMatrix4 = {x:a-sqTop/2,y:b+sqLeft/2};//左下
     
     //基準となる x or y のスタート座標
     var x1 = sqMatrix1.x - self.dotR*2,//sqMatrix1
-    		y2 = sqMatrix2.y - self.dotR*2,//sqMatrix2
-    		x3 = sqMatrix3.x + self.dotR*2,//sqMatrix3
-    		y4 = sqMatrix4.y + self.dotR*2;//sqMatrix4
+        y2 = sqMatrix2.y - self.dotR*2,//sqMatrix2
+        x3 = sqMatrix3.x + self.dotR*2,//sqMatrix3
+        y4 = sqMatrix4.y + self.dotR*2;//sqMatrix4
     
     function paint() {
 
-			//左上→右上
+      //左上→右上
       x1 = x1 + self.dotR*2+2;
       var y1 = -Math.sqrt(r*r - (x1-a)*(x1-a)) + b;
       if(!isNaN(x1) && !isNaN(y1)){
@@ -645,27 +645,27 @@ DotPaint.prototype = {
   },
   
   paintCircleOnGuide: function (/*{[r:r], [a:a], [b:b], color:color, [cntMax:cntMax], [loopTime:loopTime]}*/) {
-  	var self = this;
-		var r = Math.floor(arguments[0].r/(self.dotR*2)) || 200,
-    		a = Math.floor(arguments[0].a/(self.dotR*2)) || 0,
-    		b = Math.floor(arguments[0].b/(self.dotR*2)) || 0,
-    		color = arguments[0].color,
-    		cntMax = arguments[0].cntMax && arguments[0].cntMax < r*2 ? arguments[0].cntMax : r*2,
-    		loopTime = arguments[0].loopTime || 1;
-  	var timerId = [],
-    		cnt = 0;
+    var self = this;
+    var r = Math.floor(arguments[0].r/(self.dotR*2)) || 200,
+        a = Math.floor(arguments[0].a/(self.dotR*2)) || 0,
+        b = Math.floor(arguments[0].b/(self.dotR*2)) || 0,
+        color = arguments[0].color,
+        cntMax = arguments[0].cntMax && arguments[0].cntMax < r*2 ? arguments[0].cntMax : r*2,
+        loopTime = arguments[0].loopTime || 1;
+    var timerId = [],
+        cnt = 0;
     
     var x1 = a-r-1,
-    		y2 = b-r-1;
+        y2 = b-r-1;
     
     function paint() {
       x1++;
       var y1_1 = -Math.sqrt(r*r - (x1-a)*(x1-a)) + b,
-      		y1_2 = Math.sqrt(r*r - (x1-a)*(x1-a)) + b;
+          y1_2 = Math.sqrt(r*r - (x1-a)*(x1-a)) + b;
       //dotの直径で割ってguideの基準値に合わせる
       var gx1 = Math.ceil(x1 / (self.dotR*2)),
-      		gy1_1 = Math.ceil(y1_1 / (self.dotR*2)),
-      		gy1_2 = Math.ceil(y1_2 / (self.dotR*2)); 
+          gy1_1 = Math.ceil(y1_1 / (self.dotR*2)),
+          gy1_2 = Math.ceil(y1_2 / (self.dotR*2)); 
       if(!isNaN(gx1) && !isNaN(gy1_1) && !isNaN(gy1_2) && gx1 > -1 && gy1_1 > -1  && gy1_2 > -1 && gx1 < self.guide.length && gy1_1 < self.guide[0].length && gy1_2 < self.guide[0].length){
         self.drawDot(self.guide[gx1][gy1_1].x,self.guide[gx1][gy1_1].y,self.dotR,color);
         self.drawDot(self.guide[gx1][gy1_2].x,self.guide[gx1][gy1_2].y,self.dotR,color);
@@ -673,11 +673,11 @@ DotPaint.prototype = {
       
       y2++;
       var x2_1 = -Math.sqrt(r*r - (y2-b)*(y2-b)) + a,
-      		x2_2 = Math.sqrt(r*r - (y2-b)*(y2-b)) + a;
+          x2_2 = Math.sqrt(r*r - (y2-b)*(y2-b)) + a;
       //dotの直径で割ってguideの基準値に合わせる
       var gy2 = Math.ceil(y2 / (self.dotR*2)),
-      		gx2_1 = Math.ceil(x2_1 / (self.dotR*2)),
-      		gx2_2 = Math.ceil(x2_2 / (self.dotR*2));
+          gx2_1 = Math.ceil(x2_1 / (self.dotR*2)),
+          gx2_2 = Math.ceil(x2_2 / (self.dotR*2));
       if(!isNaN(gx2_1) && !isNaN(gx2_2) && !isNaN(gy2) && gx2_1 > -1 && gx2_2> -1  && gy2 > -1 && gx2_1 < self.guide.length && gx2_2 < self.guide.length && gy2 < self.guide[0].length){
         self.drawDot(self.guide[gx2_1][gy2].x,self.guide[gx2_1][gy2].y,self.dotR,color);
         self.drawDot(self.guide[gx2_2][gy2].x,self.guide[gx2_2][gy2].y,self.dotR,color);
@@ -696,30 +696,30 @@ DotPaint.prototype = {
   paintImagedata: function(/*{imagedata:imagedata, imageW:imageW, imageH:imageH, [startX:startX], [startY:startY], [loopTime:loopTime]}*/) {
     var self = this;
     var imagedata = arguments[0].imagedata,
-    		imageW = arguments[0].imageW,
-    		imageH = arguments[0].imageH,
-    		startX = Math.floor(arguments[0].startX/(self.dotR*2)) || 0,
-    		startY = Math.floor(arguments[0].startY/(self.dotR*2)) || 0,
-    		loopTime = arguments[0].loopTime || 1;
+        imageW = arguments[0].imageW,
+        imageH = arguments[0].imageH,
+        startX = Math.floor(arguments[0].startX/(self.dotR*2)) || 0,
+        startY = Math.floor(arguments[0].startY/(self.dotR*2)) || 0,
+        loopTime = arguments[0].loopTime || 1;
     var data = imagedata.data,
-    		dataLen = data.length,
-    		pixels = dataLen/4;
+        dataLen = data.length,
+        pixels = dataLen/4;
     var rgb = [];
     
     //各pixelのrgb値を抽出
     for(var i=0; i<pixels; i++) {
       var r = data[i*4],
-      		g = data[i*4+1],
-      		b = data[i*4+2];
+          g = data[i*4+1],
+          b = data[i*4+2];
       rgb[i] = 'rgb(' + r + ', ' + g + ', ' + b + ');'      
     }
     
     var cnt = 0,
-    		cntMax = pixels+1,
-    		x = startX-1,
-    		y = startY,
-    		wMax = imageW+startX,
-    		timerId = [];
+        cntMax = pixels+1,
+        x = startX-1,
+        y = startY,
+        wMax = imageW+startX,
+        timerId = [];
 
     function paint() {      
       if(x < wMax-1) {
@@ -729,7 +729,7 @@ DotPaint.prototype = {
         y++;
       }
       if(x > -1 && y > -1 && x < self.guide.length && y < self.guide[0].length) {
-      	self.drawDot(self.guide[x][y].x,self.guide[x][y].y,self.dotR,rgb[cnt]);
+        self.drawDot(self.guide[x][y].x,self.guide[x][y].y,self.dotR,rgb[cnt]);
       }
       cnt++;
       
@@ -746,30 +746,30 @@ DotPaint.prototype = {
   paintImagedataRandom: function(/*{imagedata:imagedata, imageW:imageW, imageH:imageH, [startX:startX], [startY:startY], [loopTime:loopTime]}*/) {
     var self = this;
     var imagedata = arguments[0].imagedata,
-    		imageW = arguments[0].imageW,
-    		imageH = arguments[0].imageH,
-    		startX = Math.floor(arguments[0].startX/(self.dotR*2)) || 0,
-    		startY = Math.floor(arguments[0].startY/(self.dotR*2)) || 0,
-    		loopTime = arguments[0].loopTime || 1;
+        imageW = arguments[0].imageW,
+        imageH = arguments[0].imageH,
+        startX = Math.floor(arguments[0].startX/(self.dotR*2)) || 0,
+        startY = Math.floor(arguments[0].startY/(self.dotR*2)) || 0,
+        loopTime = arguments[0].loopTime || 1;
     var data = imagedata.data,
-    		dataLen = data.length,
-    		pixels = dataLen/4;
+        dataLen = data.length,
+        pixels = dataLen/4;
     var rgb = [],
-    		timerId = [];
+        timerId = [];
     
     //各pixelのrgb値を抽出
     for(var i=0; i<pixels; i++) {
       var r = data[i*4],
-      		g = data[i*4+1],
-      		b = data[i*4+2];    
+          g = data[i*4+1],
+          b = data[i*4+2];    
       rgb[i] = 'rgb(' + r + ', ' + g + ', ' + b + ');'
     }
     
     //guideに沿った座標およびその色を配列に格納
     var x = startX-1,
-    		y = startY,
-    		wMax = imageW + startX,
-    		guideData = [];
+        y = startY,
+        wMax = imageW + startX,
+        guideData = [];
     for(var i=0; i<pixels; i++) {
       if(x < wMax-1) {
         x++;
@@ -782,7 +782,7 @@ DotPaint.prototype = {
 
     //描画開始
     var cnt=0,
-    		cntMax = guideData.length;
+        cntMax = guideData.length;
 
     //重複しないようにカウントチェック配列
     var cntCheckAry = [];
@@ -804,8 +804,8 @@ DotPaint.prototype = {
       } while(randomCnt==null);
       
       if(guideData[randomCnt].x > -1 && guideData[randomCnt].y > -1 && guideData[randomCnt].x < self.guide.length && guideData[randomCnt].y < self.guide[0].length) {
-	      self.drawDot(self.guide[guideData[randomCnt].x][guideData[randomCnt].y].x, self.guide[guideData[randomCnt].x][guideData[randomCnt].y].y, self.dotR, guideData[randomCnt].rgb);
-  		}
+        self.drawDot(self.guide[guideData[randomCnt].x][guideData[randomCnt].y].x, self.guide[guideData[randomCnt].x][guideData[randomCnt].y].y, self.dotR, guideData[randomCnt].rgb);
+      }
       cnt++;
       
       if(cnt < cntMax) {
@@ -818,19 +818,19 @@ DotPaint.prototype = {
   },
   
   paintSquare: function (/*{[startX:startX], [startY:startY], topLength:topLength, leftLength:leftLength, color:color, [loopTime:loopTime]}*/) {
-		var self = this;
-		var startX = arguments[0].startX || 0,
-				startY = arguments[0].startY || 0,
-				topLength = arguments[0].topLength,
-				leftLength = arguments[0].leftLength,
-				color = arguments[0].color,
-				loopTime = arguments[0].loopTime || 1;
+    var self = this;
+    var startX = arguments[0].startX || 0,
+        startY = arguments[0].startY || 0,
+        topLength = arguments[0].topLength,
+        leftLength = arguments[0].leftLength,
+        color = arguments[0].color,
+        loopTime = arguments[0].loopTime || 1;
 
     var timerIdPaintX = [],
-    		cntPaintX = 0,
-    		xPaintX = startX,
-    		yPaintX = startY,
-    		cntMaxPaintX = topLength;
+        cntPaintX = 0,
+        xPaintX = startX,
+        yPaintX = startY,
+        cntMaxPaintX = topLength;
     function paintX() {
       xPaintX++;
       self.drawDot(xPaintX,yPaintX,self.dotR,color);
@@ -845,10 +845,10 @@ DotPaint.prototype = {
     }
   
     var timerIdPaintY = [],
-    		cntPaintY = 0,
-    		xPaintY = startX,
-    		yPaintY = startY,
-    		cntMaxPaintY = leftLength;
+        cntPaintY = 0,
+        xPaintY = startX,
+        yPaintY = startY,
+        cntMaxPaintY = leftLength;
     function paintY() {
       yPaintY++;
       self.drawDot(xPaintY,yPaintY,self.dotR,color);
@@ -867,13 +867,13 @@ DotPaint.prototype = {
   },
   
   paintSquareOnGuide: function (/*{[startX:startX], [startY:startY], topLength:topLength, leftLength:leftLength, color:color, [loopTime:loopTime]}*/) {
-  	var self = this;
-		var startX = arguments[0].startX || 0,
-				startY = arguments[0].startY || 0,
-				topLength = arguments[0].topLength,
-				leftLength = arguments[0].leftLength,
-				color = arguments[0].color,
-				loopTime = arguments[0].loopTime || 1;
+    var self = this;
+    var startX = arguments[0].startX || 0,
+        startY = arguments[0].startY || 0,
+        topLength = arguments[0].topLength,
+        leftLength = arguments[0].leftLength,
+        color = arguments[0].color,
+        loopTime = arguments[0].loopTime || 1;
     
     //startXのガイド上の近似値を求める
     for(var i=0; i < self.guide.length-1; i++) {
@@ -902,10 +902,10 @@ DotPaint.prototype = {
     }
 
     var timerIdPaintX = [],
-    		cntPaintX = -1,
-    		xPaintX = startX-1,
-    		yPaintX = startY,
-    		cntMaxPaintX = topLength/(self.dotR*2);
+        cntPaintX = -1,
+        xPaintX = startX-1,
+        yPaintX = startY,
+        cntMaxPaintX = topLength/(self.dotR*2);
     function paintX() {
       xPaintX++;
       if(xPaintX > -1 && yPaintX > -1 && xPaintX < self.guide.length && yPaintX < self.guide[0].length){
@@ -922,10 +922,10 @@ DotPaint.prototype = {
     }
   
     var timerIdPaintY = [],
-    		cntPaintY = 0,
-    		xPaintY = startX,
-    		yPaintY = startY,
-    		cntMaxPaintY = leftLength/(self.dotR*2);
+        cntPaintY = 0,
+        xPaintY = startX,
+        yPaintY = startY,
+        cntMaxPaintY = leftLength/(self.dotR*2);
     function paintY() {
       yPaintY++;
       if(xPaintY > -1 && yPaintY > -1 && xPaintY < self.guide.length && yPaintY < self.guide[0].length){
