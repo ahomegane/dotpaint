@@ -1,5 +1,6 @@
 /**
 * @fileOverview dotpaint main process
+* https://github.com/ahomegane/dotpaint/
 * @name dotpaint.js
 * @author ahomegane / Keiichiro Watanabe
 * @version 1.0.0
@@ -14,9 +15,11 @@ document.addEventListener('DOMContentLoaded', function(){
     canvasId:'freeCanvas', 
     canvasWidth:800, 
     canvasHeight:600, 
-    canvasColor:'#fff', 
+    canvasColor:'#fff',
+    canvasBorderColor:'#000',
+    canvasBorderWidth:'2px',
     bgId:'freeCanvasBg', 
-    bgColor:'#000'
+    bgColor:'#fff'
   });
   freeCanvas.create();
   
@@ -45,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function(){
     dotPaint.paintCircle({
       r:i,
       a:700,
-      b:500,
+      b:550,
       color:randomColorLine
       //cntMax:500
     });
@@ -54,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function(){
     dotPaint.paintCircleNoPile({
       r:i,
       a:700,
-      b:500,
+      b:550,
       color:randomColorDot,
       //cntMax:1000,
       loopTime:2
@@ -62,23 +65,25 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   /**
-  * new year demo
+  * new year test
   */
-  dotPaint.overrideDotR(6);
+  setTimeout(function(){
+    dotPaint.overrideDotR(6);
 
-  var sc01 = sc('',100,12);
-  var imageDataSc01 = sc01.text('2013年','#fff','normal normal 12px sans-serif', 0, 0).getImageData(0,0,44,12);//44pxの幅のエリアを抽出
-  dotPaint.paintImageData({
-    imageData:imageDataSc01,
-    imageW:44,
-    imageH:12,
-    startX:50,
-    startY:50,
-    loopTime:0
-  });
+    var sc01 = sc(true,'',100,12);
+    var imageDataSc01 = sc01.text('2013年','#fff','normal normal 12px sans-serif', 0, 0).getImageData(0,0,44,12);//44pxの幅のエリアを抽出
+    dotPaint.paintImageData({
+      imageData:imageDataSc01,
+      imageW:44,
+      imageH:12,
+      startX:50,
+      startY:50,
+      loopTime:0
+    });
+  },1000);
 
   setTimeout(function(){
-    var sc02 = sc('',100,12,'#fff');
+    var sc02 = sc(true,'',100,12,'#fff');
     var imageDataSc02 = sc02.text('明けまし','#000','normal bold 10px sans-serif', 0, 0, 100).getImageData(0,0,40,12);
     dotPaint.paintImageDataRandom({
       imageData:imageDataSc02,
@@ -89,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function(){
       loopTime:0
     });
 
-    var sc03 = sc('',100,20,'#fff');
+    var sc03 = sc(true,'',100,20,'#fff');
     var imageDataSc03 = sc03.text('た！','#000','normal bold 17px sans-serif', 0, 0, 100).getImageData(0,0,28,20);
     dotPaint.paintImageDataRandom({
       imageData:imageDataSc03,
@@ -99,7 +104,13 @@ document.addEventListener('DOMContentLoaded', function(){
       startY:360,
       loopTime:0
     });
-  },2000);
+  },3500);
+
+  setTimeout(function(){
+    //すでにあるctxに追加する場合、false
+    var sc04 = sc(false,'#freeCanvas');
+    sc04.text('よろしくお願いします。', '#EF454A', 'normal bold 16px serif', 610, 110);
+  },7000);
 
   /**
   * file drop
@@ -145,15 +156,18 @@ cv.FreeCanvas = function(/*{
   canvasWidth:canvasWidth,
   canvasHeight:canvasHeight,
   canvasColor:canvasColor,
+  canvasBorderColor:canvasBorderColor,
+  canvasBorderWidth:canvasBorderWidth,
   bgId:bgId,
   bgColor:bgColor
 }*/){
-
   this.el = {};
   this.el.canvas = document.getElementById(arguments[0].canvasId);
   this.canvasW = arguments[0].canvasWidth;
   this.canvasH = arguments[0].canvasHeight;
   this.canvasColor = arguments[0].canvasColor;
+  this.canvasBorderColor = arguments[0].canvasBorderColor;
+  this.canvasBorderWidth = arguments[0].canvasBorderWidth;
   
   this.el.bg = document.getElementById(arguments[0].bgId);
   this.bgColor = arguments[0].bgColor;
@@ -190,7 +204,11 @@ cv.FreeCanvas.prototype = {
     if(!isResize) {
       var style = {
         'background-color':this.canvasColor,
-        'position': 'absolute'
+        'border-color':this.canvasBorderColor,
+        'border-style':'solid',
+        'border-width':this.canvasBorderWidth,
+        'position': 'absolute',
+        'display': 'block'
       }
       for(var i in style) {
         this.el.canvas.style[i] = style[i];
@@ -227,22 +245,27 @@ cv.FreeCanvas.prototype = {
 * simpleCanvasクラス Interface function
 */
 //release global namespace later
-var sc = window.sc || function(canvasSelector,canvasWidth,canvasHeight,canvasBgColor) {
-  return new cv.SimpleCanvas(canvasSelector,canvasWidth,canvasHeight,canvasBgColor);
+var sc = window.sc || function(isCreate,canvasSelector,canvasWidth,canvasHeight,canvasBgColor) {
+  return new cv.SimpleCanvas(isCreate,canvasSelector,canvasWidth,canvasHeight,canvasBgColor);
 }
 
 /**
 * simpleCanvasクラス
 */
-cv.SimpleCanvas = function(canvasSelector,canvasWidth,canvasHeight,canvasBgColor) {
+cv.SimpleCanvas = function(isCreate,canvasSelector,canvasWidth,canvasHeight,canvasBgColor) {
   this.selector = canvasSelector;
   this.width = canvasWidth;
   this.height = canvasHeight;
   this.bgColor = canvasBgColor;
 
   this.el = null;
-
-  return this.create(this.selector,this.width,this.height,this.bgColor);
+  this.ctx = null;
+  
+  if(isCreate) {
+    return this.create(this.selector,this.width,this.height,this.bgColor);
+  } else {
+    return this.find(this.selector);
+  }
 }
 cv.SimpleCanvas.prototype = {
 
@@ -272,6 +295,16 @@ cv.SimpleCanvas.prototype = {
     }
     //fillStyleを黒に戻す
     this.ctx.fillStyle = '#000';
+
+    return this;
+  },
+
+  find: function(selector) {
+    var el = document.querySelector(selector);
+    this.ctx = el.getContext('2d');
+    this.width = el.width;
+    this.height = el.height;
+    this.el = el;
 
     return this;
   },
