@@ -138,6 +138,39 @@ document.addEventListener('DOMContentLoaded', function(){
   // });
   fileDrop.closeWindow();
 
+  /**
+  * 画像保存
+  * http://ytkm.naobun.com/wordpress/?p=386
+  */
+  setTimeout(function(){
+    //image/jpg,image/pngを設定可能。gif/svgは未対応。未対応の場合もしくは引数未入力の場合はpngになる
+    var dataUrl = dotPaint.el.canvas.toDataURL("image/png");
+
+    //出力エリアラップ要素
+    var div = document.createElement('div');
+    div.id = 'outputImage';
+
+    //画像として表示
+    // var img = document.createElement('img');
+    // img.src = dataUrl;
+    // div.appendChild(img);   
+
+    //画像として表示ボタン
+    var a = document.createElement('a');
+    a.href = dataUrl;
+    a.innerText = '画像として表示';
+    a.target = '_blank';
+    div.appendChild(a); 
+
+    document.body.insertBefore(div, document.body.childNodes[0]);
+    
+
+    //base64データの抽出。先頭の 'data:image/png;base64,' の部分を削除
+    var base64 = dataUrl.replace(/^data:image\/(png|jpg);base64,/,'');
+    //console.log(base64);
+
+  },8000);
+
 }, false);
 
 (function(){
