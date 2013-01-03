@@ -7,7 +7,10 @@
 * @namespace global [cv,sc]
 */
 
-//for demo
+/**
+* demo
+*/
+(function(){
 document.addEventListener('DOMContentLoaded', function(){
 
   //create canvas
@@ -171,7 +174,84 @@ document.addEventListener('DOMContentLoaded', function(){
 
   },8000);
 
-}, false);
+  /**
+  * three.js
+  */
+  setTimeout(function(){
+    document.getElementById('container').innerHTML = '';
+
+    //未対応ブラウザへの対応
+    if(!Detector.webgl) Detector.addGetWebGLMessage();
+
+    // (1)レンダラの初期化
+    var renderer = new THREE.WebGLRenderer({ antialias:true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColorHex(0xffffff, 1);
+    document.body.appendChild(renderer.domElement);
+
+    // (2)シーンの作成
+    var scene = new THREE.Scene();
+
+    // (3)カメラの作成
+    //平行投影を行うOrthographicCameraと透視投影のPerspectiveCamera
+    //http://ha7.seikyou.ne.jp/home/tonta/cg2.html
+    var camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight);
+    camera.position = new THREE.Vector3(0, 0, 8);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    scene.add(camera);
+
+    // (4)ライトの作成
+    var light = new THREE.DirectionalLight(0xffffff);
+    light.position = new THREE.Vector3(0.577, 0.577, 0.577);
+    scene.add(light);
+
+    var ambient = new THREE.AmbientLight(0x333333);
+    scene.add(ambient);
+
+    // (5)表示する物体の作成
+    var geometry = new THREE.SphereGeometry(1, 32, 16);
+    //光を当てると想定した場合の物体の質感
+    // テクスチャを作成
+    var texture = new THREE.Texture(dotPaint.el.canvas);
+    texture.needsUpdate = true;
+    var material = new THREE.MeshPhongMaterial({
+      color: 0xffffff, specular: 0xcccccc, shininess:50, ambient: 0xffffff,
+      map: texture, side: THREE.DoubleSide,
+      bumpMap:texture, bumpScale: 0.05 });
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    // (6)レンダリング
+    var controls = new THREE.OrbitControls(camera);
+    controls.center = new THREE.Vector3(0, 0, 0);
+    var baseTime = +new Date;//+をつけることで数値に
+    function render() {
+      //ブラウザベンダーが実装を進めているsetIntervalに変わるアニメーションフレーム
+      //three.jsはラッパーを用意しているが、通常はベンダープレフィックスが必要
+      requestAnimationFrame(render);
+
+      // カメラの状態を更新
+      controls.update();
+
+      mesh.rotation.y = 0.3 * (+new Date - baseTime) / 1000;
+      renderer.render(scene, camera);
+    };
+    render();
+    
+
+    // リサイズへの対応
+    window.addEventListener('resize', function() {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    }, false );
+
+  },9000);
+
+},false);
+
+})();
+
 
 (function(){
 
