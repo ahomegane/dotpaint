@@ -7,7 +7,10 @@
 * @namespace global [cv,sc]
 */
 
-//for demo
+/**
+* demo
+*/
+(function(){
 document.addEventListener('DOMContentLoaded', function(){
 
   //create canvas
@@ -29,7 +32,10 @@ document.addEventListener('DOMContentLoaded', function(){
     dotR: 6
    });
   dotPaint.init();
-  
+
+  /**
+  * dot sample
+  */
   //dotPaint.sample();
 
   /**
@@ -110,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function(){
     //すでにあるctxに追加する場合、false
     var sc04 = sc(false,'#freeCanvas');
     sc04.text('よろしくお願いします。', '#EF454A', 'normal bold 16px serif', 610, 110);
-  },7000);
+  },7900);
 
   /**
   * file drop
@@ -135,7 +141,117 @@ document.addEventListener('DOMContentLoaded', function(){
   // });
   fileDrop.closeWindow();
 
-}, false);
+  /**
+  * 画像保存
+  * http://ytkm.naobun.com/wordpress/?p=386
+  */
+  setTimeout(function(){
+    //image/jpg,image/pngを設定可能。gif/svgは未対応。未対応の場合もしくは引数未入力の場合はpngになる
+    var dataUrl = dotPaint.el.canvas.toDataURL("image/png");
+
+    //出力エリアラップ要素
+    var div = document.createElement('div');
+    div.id = 'outputImage';
+
+    //画像として表示
+    // var img = document.createElement('img');
+    // img.src = dataUrl;
+    // div.appendChild(img);   
+
+    //画像として表示ボタン
+    var a = document.createElement('a');
+    a.href = dataUrl;
+    a.innerText = '画像として表示';
+    a.target = '_blank';
+    div.appendChild(a); 
+
+    document.body.insertBefore(div, document.body.childNodes[0]);
+    
+
+    //base64データの抽出。先頭の 'data:image/png;base64,' の部分を削除
+    var base64 = dataUrl.replace(/^data:image\/(png|jpg);base64,/,'');
+    //console.log(base64);
+
+  },8000);
+
+  /**
+  * three.js
+  */
+  setTimeout(function(){
+    document.getElementById('container').innerHTML = '';
+
+    //未対応ブラウザへの対応
+    if(!Detector.webgl) Detector.addGetWebGLMessage();
+
+    // (1)レンダラの初期化
+    var renderer = new THREE.WebGLRenderer({ antialias:true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColorHex(0xffffff, 1);
+    document.body.appendChild(renderer.domElement);
+
+    // (2)シーンの作成
+    var scene = new THREE.Scene();
+
+    // (3)カメラの作成
+    //平行投影を行うOrthographicCameraと透視投影のPerspectiveCamera
+    //http://ha7.seikyou.ne.jp/home/tonta/cg2.html
+    var camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight);
+    camera.position = new THREE.Vector3(0, 0, 8);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    scene.add(camera);
+
+    // (4)ライトの作成
+    var light = new THREE.DirectionalLight(0xffffff);
+    light.position = new THREE.Vector3(0.577, 0.577, 0.577);
+    scene.add(light);
+
+    var ambient = new THREE.AmbientLight(0x333333);
+    scene.add(ambient);
+
+    // (5)表示する物体の作成
+    var geometry = new THREE.SphereGeometry(1, 32, 16);
+    //光を当てると想定した場合の物体の質感
+    // テクスチャを作成
+    var texture = new THREE.Texture(dotPaint.el.canvas);
+    texture.needsUpdate = true;
+    var material = new THREE.MeshPhongMaterial({
+      color: 0xffffff, specular: 0xcccccc, shininess:50, ambient: 0xffffff,
+      map: texture, side: THREE.DoubleSide,
+      bumpMap:texture, bumpScale: 0.05 });
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    // (6)レンダリング
+    var controls = new THREE.OrbitControls(camera);
+    controls.center = new THREE.Vector3(0, 0, 0);
+    var baseTime = +new Date;//+をつけることで数値に
+    function render() {
+      //ブラウザベンダーが実装を進めているsetIntervalに変わるアニメーションフレーム
+      //three.jsはラッパーを用意しているが、通常はベンダープレフィックスが必要
+      requestAnimationFrame(render);
+
+      // カメラの状態を更新
+      controls.update();
+
+      mesh.rotation.y = 0.3 * (+new Date - baseTime) / 1000;
+      renderer.render(scene, camera);
+    };
+    render();
+    
+
+    // リサイズへの対応
+    window.addEventListener('resize', function() {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    }, false );
+
+  },9000);
+
+},false);
+
+})();
+
 
 (function(){
 
@@ -456,10 +572,20 @@ cv.DotPaint.prototype = {
     // });
 
     //paintSquare
-    // dotPaint.paintSquare({
+    dotPaint.paintSquare({
+      startX:100,
+      startY:100,
+      topLength:200,
+      leftLength:300,
+      color:'#000',
+      loopTime:5
+    });
+
+    //paintSquareNoPile
+    // dotPaint.paintSquareNoPile({
     //   startX:100,
     //   startY:100,
-    //   topLength:200,
+    //   topLength:500,
     //   leftLength:300,
     //   color:'#000',
     //   loopTime:5
@@ -471,6 +597,36 @@ cv.DotPaint.prototype = {
     //   startY:100,
     //   topLength:500,
     //   leftLength:300,
+    //   color:'#000',
+    //   loopTime:5
+    // });
+
+    //paintTriangle
+    dotPaint.paintTriangle({
+      startX:100,
+      startY:100,
+      bottomLength:500,
+      heightLength:300,
+      color:'#000',
+      loopTime:5
+    });
+
+    //paintTriangleNoPile
+    dotPaint.paintTriangleNoPile({
+      startX:100,
+      startY:100,
+      bottomLength:650,
+      heightLength:300,
+      color:'#000',
+      loopTime:5
+    });
+
+    //paintTriangleOnGuide
+    // dotPaint.paintTriangleOnGuide({
+    //   startX:100,
+    //   startY:100,
+    //   bottomLength:500,
+    //   heightLength:300,
     //   color:'#000',
     //   loopTime:5
     // });
@@ -772,8 +928,8 @@ cv.DotPaint.prototype = {
     var imageData = arguments[0].imageData,
         imageW = arguments[0].imageW,
         imageH = arguments[0].imageH,
-        startX = Math.floor(arguments[0].startX/(self.dotR*2)) || 0,
-        startY = Math.floor(arguments[0].startY/(self.dotR*2)) || 0,
+        startX = Math.ceil(arguments[0].startX/(self.dotR*2)) || 0,
+        startY = Math.ceil(arguments[0].startY/(self.dotR*2)) || 0,
         loopTime = arguments[0].loopTime || 1;
     var data = imageData.data,
         dataLen = data.length,
@@ -822,8 +978,8 @@ cv.DotPaint.prototype = {
     var imageData = arguments[0].imageData,
         imageW = arguments[0].imageW,
         imageH = arguments[0].imageH,
-        startX = Math.floor(arguments[0].startX/(self.dotR*2)) || 0,
-        startY = Math.floor(arguments[0].startY/(self.dotR*2)) || 0,
+        startX = Math.ceil(arguments[0].startX/(self.dotR*2)) || 0,
+        startY = Math.ceil(arguments[0].startY/(self.dotR*2)) || 0,
         loopTime = arguments[0].loopTime || 1;
     var data = imageData.data,
         dataLen = data.length,
@@ -901,16 +1057,16 @@ cv.DotPaint.prototype = {
         loopTime = arguments[0].loopTime || 1;
 
     var timerIdPaintX = [],
-        cntPaintX = 0,
         xPaintX = startX,
         yPaintX = startY,
-        cntMaxPaintX = topLength;
+        cntPaintX = xPaintX,
+        cntMaxPaintX = cntPaintX + topLength;
     function paintX() {
       xPaintX++;
       self.drawDot(xPaintX,yPaintX,self.dotR,color);
       self.drawDot(xPaintX,yPaintX+leftLength,self.dotR,color);
       
-      cntPaintX++;
+      cntPaintX = xPaintX;
       if(cntPaintX < cntMaxPaintX) {
         timerIdPaintX.push(setTimeout(paintX,loopTime));
       } else {
@@ -919,16 +1075,65 @@ cv.DotPaint.prototype = {
     }
   
     var timerIdPaintY = [],
-        cntPaintY = 0,
         xPaintY = startX,
         yPaintY = startY,
-        cntMaxPaintY = leftLength;
+        cntPaintY = xPaintY,
+        cntMaxPaintY = cntPaintY + leftLength;
     function paintY() {
       yPaintY++;
       self.drawDot(xPaintY,yPaintY,self.dotR,color);
       self.drawDot(xPaintY+topLength,yPaintY,self.dotR,color);
           
-      cntPaintY++;
+      cntPaintY = yPaintY;
+      if(cntPaintY < cntMaxPaintY) {
+        timerIdPaintY.push(setTimeout(paintY,loopTime));
+      } else {
+        do{clearTimeout(timerIdPaintY.shift());}while(timerIdPaintY.length > 0);
+      }
+    }
+    
+    paintX();
+    paintY();
+  },
+
+  paintSquareNoPile: function (/*{[startX:startX], [startY:startY], topLength:topLength, leftLength:leftLength, color:color, [loopTime:loopTime]}*/) {
+    var self = this;
+    var startX = arguments[0].startX || 0,
+        startY = arguments[0].startY || 0,
+        topLength = arguments[0].topLength,
+        leftLength = arguments[0].leftLength,
+        color = arguments[0].color,
+        loopTime = arguments[0].loopTime || 1;
+
+    var timerIdPaintX = [],
+        xPaintX = startX-self.dotR*2,
+        yPaintX = startY,
+        cntPaintX = xPaintX,
+        cntMaxPaintX = cntPaintX + topLength;
+    function paintX() {
+      xPaintX += self.dotR*2;
+      self.drawDot(xPaintX,yPaintX,self.dotR,color);
+      self.drawDot(xPaintX,yPaintX+leftLength,self.dotR,color);
+      
+      cntPaintX = xPaintX;
+      if(cntPaintX < cntMaxPaintX) {
+        timerIdPaintX.push(setTimeout(paintX,loopTime));
+      } else {
+        do{clearTimeout(timerIdPaintX.shift());}while(timerIdPaintX.length > 0);
+      }
+    }
+  
+    var timerIdPaintY = [],
+        xPaintY = startX,
+        yPaintY = startY,
+        cntPaintY = xPaintY,
+        cntMaxPaintY = cntPaintY + leftLength;
+    function paintY() {
+      yPaintY += self.dotR*2;
+      self.drawDot(xPaintY,yPaintY,self.dotR,color);
+      self.drawDot(xPaintY+topLength - topLength%(self.dotR*2) ,yPaintY,self.dotR,color);
+          
+      cntPaintY = yPaintY;
       if(cntPaintY < cntMaxPaintY) {
         timerIdPaintY.push(setTimeout(paintY,loopTime));
       } else {
@@ -967,19 +1172,19 @@ cv.DotPaint.prototype = {
         
     //leftLengthのガイド上の近似値を求める
     if(leftLength % (self.dotR*2) != 0 ) {
-      leftLength = (self.dotR*2)*Math.floor(leftLength/(self.dotR*2))+(self.dotR*2);
+      leftLength = (self.dotR*2)*Math.ceil(leftLength/(self.dotR*2))+(self.dotR*2);
     }
 
     //topLengthのガイド上の近似値を求める
     if(topLength % (self.dotR*2) != 0 ) {
-      topLength = (self.dotR*2)*Math.floor(topLength/(self.dotR*2))+(self.dotR*2);
+      topLength = (self.dotR*2)*Math.ceil(topLength/(self.dotR*2))+(self.dotR*2);
     }
 
     var timerIdPaintX = [],
-        cntPaintX = -1,
         xPaintX = startX-1,
         yPaintX = startY,
-        cntMaxPaintX = topLength/(self.dotR*2);
+        cntPaintX = xPaintX,
+        cntMaxPaintX = cntPaintX + topLength/(self.dotR*2) + 1;
     function paintX() {
       xPaintX++;
       if(xPaintX > -1 && yPaintX > -1 && xPaintX < self.guide.length && yPaintX < self.guide[0].length){
@@ -987,7 +1192,7 @@ cv.DotPaint.prototype = {
         self.drawDot(self.guide[xPaintX][yPaintX].x,self.guide[xPaintX][yPaintX].y+leftLength,self.dotR,color);
       }
           
-      cntPaintX++;
+      cntPaintX = xPaintX;
       if(cntPaintX < cntMaxPaintX) {
         timerIdPaintX.push(setTimeout(paintX, loopTime));
       } else {
@@ -996,10 +1201,10 @@ cv.DotPaint.prototype = {
     }
   
     var timerIdPaintY = [],
-        cntPaintY = 0,
         xPaintY = startX,
         yPaintY = startY,
-        cntMaxPaintY = leftLength/(self.dotR*2);
+        cntPaintY = xPaintY,
+        cntMaxPaintY = cntPaintY + leftLength/(self.dotR*2);
     function paintY() {
       yPaintY++;
       if(xPaintY > -1 && yPaintY > -1 && xPaintY < self.guide.length && yPaintY < self.guide[0].length){
@@ -1007,7 +1212,7 @@ cv.DotPaint.prototype = {
         self.drawDot(self.guide[xPaintY][yPaintY].x+topLength,self.guide[xPaintY][yPaintY].y,self.dotR,color);
       }
 
-      cntPaintY++;
+      cntPaintY = yPaintY;
       if(cntPaintY < cntMaxPaintY) {
         timerIdPaintY.push(setTimeout(paintY, loopTime));
       } else {
@@ -1017,7 +1222,270 @@ cv.DotPaint.prototype = {
     
     paintX();
     paintY();
-  } 
+  },
+
+  paintTriangle: function (/*{[startX:startX], [startY:startY], bottomLength:bottomLength, heightLength:heightLength, bottomLength:bottomLength, color:color, [loopTime:loopTime]}*/) {
+    var self = this;
+    var startX = arguments[0].startX || 0,
+        startY = arguments[0].startY || 0,
+        bottomLength = arguments[0].bottomLength,
+        heightLength = arguments[0].heightLength,
+        color = arguments[0].color,
+        loopTime = arguments[0].loopTime || 1;
+
+    //四角を計算して、底辺(1)・左上(2)・右上(3)を描画
+
+    //底辺(1)の描画
+    var timerId1 = [],
+        //左下
+        x1 = startX,
+        y1 = startY+heightLength,
+        cnt1 = x1,
+        cntMax1 = startX + bottomLength;
+    function paint1() {
+      x1++;
+      self.drawDot(x1,y1,self.dotR,color);
+
+      cnt1 = x1;
+      if(cnt1 < cntMax1) {
+        timerId1.push(setTimeout(paint1,loopTime));
+      } else {
+        do{clearTimeout(timerId1.shift());}while(timerId1.length > 0);
+      }
+    }
+
+    //右上(3)の描画
+    var timerId2 = [],
+        //左下
+        x2 = startX,
+        y2 = startY+heightLength,
+        cnt2 = x2,
+        cntMax2 = startX + (bottomLength/2);
+    //Y=aX+bのaとbを計算
+    var a2 = -heightLength/(bottomLength/2),
+        b2 = -a2*x2+y2;//yとxがスタート位置にある場合のbを求める
+    function paint2() {
+      x2++;
+      y2 = a2 * x2 + b2;
+      self.drawDot(x2,y2,self.dotR,color);
+
+      cnt2 = x2;
+      if(cnt2 < cntMax2) {
+        timerId2.push(setTimeout(paint2,loopTime));
+      } else {
+        do{clearTimeout(timerId2.shift());}while(timerId2.length > 0);
+      }
+    }
+
+    //右上(3)の描画
+    var timerId3 = [],
+        //左下
+        x3 = startX+(bottomLength/2),
+        y3 = startY,
+        cnt3 = x3,
+        cntMax3 = startX + bottomLength;
+    //Y=aX+bのaとbを計算
+    var a3 = heightLength/(bottomLength/2),
+        b3 = -a3*x3+y3;//yとxがスタート位置にある場合のbを求める
+    function paint3() {
+      x3++;
+      y3 = a3 * x3 + b3;
+      self.drawDot(x3,y3,self.dotR,color);
+
+      cnt3 = x3
+      if(cnt3 < cntMax3) {
+        timerId3.push(setTimeout(paint3,loopTime));
+      } else {
+        do{clearTimeout(timerId3.shift());}while(timerId3.length > 0);
+      }
+    }
+    
+    paint1();
+    paint2();
+    paint3();
+  },
+
+  paintTriangleNoPile: function (/*{[startX:startX], [startY:startY], bottomLength:bottomLength, heightLength:heightLength, bottomLength:bottomLength, color:color, [loopTime:loopTime]}*/) {
+    var self = this;
+    var startX = arguments[0].startX || 0,
+        startY = arguments[0].startY || 0,
+        bottomLength = arguments[0].bottomLength,
+        heightLength = arguments[0].heightLength,
+        color = arguments[0].color,
+        loopTime = arguments[0].loopTime || 1;
+
+    //四角を計算して、底辺(1)・左上(2)・右上(3)を描画
+
+    //底辺(1)の描画
+    var timerId1 = [],
+        //左下
+        x1 = startX-self.dotR*2,
+        y1 = startY+heightLength,
+        cnt1 = x1,
+        cntMax1 = startX + bottomLength - self.dotR*2;
+    function paint1() {
+      x1 += self.dotR*2;
+      self.drawDot(x1,y1,self.dotR,color);
+
+      cnt1 = x1;
+      if(cnt1 < cntMax1) {
+        timerId1.push(setTimeout(paint1,loopTime));
+      } else {
+        do{clearTimeout(timerId1.shift());}while(timerId1.length > 0);
+      }
+    }
+
+    //左上(2),右上(3)計算時にxを増やしていく値を計算(plusX)(!=self.dotR*2)
+    var rad = Math.atan2(heightLength,bottomLength/2),
+        plusX = (self.dotR*2)*Math.cos(rad);
+
+    //左上(2)の描画
+    var timerId2 = [],
+        //左下
+        x2 = startX,
+        y2 = startY+heightLength,
+        cnt2 = x2,
+        cntMax2 = startX+(bottomLength/2) - plusX;
+    //Y=aX+bのaとbを計算
+    var a2 = -heightLength/(bottomLength/2),
+        b2 = -a2*x2+y2;//yとxがスタート位置にある場合のbを求める
+    function paint2() {
+      x2 += plusX;
+      y2 = a2 * x2 + b2;
+      self.drawDot(x2,y2,self.dotR,color);
+
+      cnt2 = x2;
+      if(cnt2 < cntMax2) {
+        timerId2.push(setTimeout(paint2,loopTime));
+      } else {
+        do{clearTimeout(timerId2.shift());}while(timerId2.length > 0);
+      }
+    }
+
+    //右上(3)の描画
+    var timerId3 = [],
+        //左下
+        x3 = startX+(bottomLength/2),//頂点がようにx3のスタート位置を調整
+        y3 = startY,
+        cnt3 = x3,
+        cntMax3 = startX + bottomLength - plusX;
+    //Y=aX+bのaとbを計算
+    var a3 = heightLength/(bottomLength/2),
+        b3 = -a3*x3+y3;//yとxがスタート位置にある場合のbを求める
+    //a,b計算後、頂点がようにx3のスタート位置を調整
+    x3 = x3 - (bottomLength/2)%plusX;
+    function paint3() {
+      x3 += plusX;
+      y3 = a3 * x3 + b3;
+      self.drawDot(x3,y3,self.dotR,color);
+
+      cnt3 = x3
+      if(cnt3 < cntMax3) {
+        timerId3.push(setTimeout(paint3,loopTime));
+      } else {
+        do{clearTimeout(timerId3.shift());}while(timerId3.length > 0);
+      }
+    }
+    
+    paint1();
+    paint2();
+    paint3();
+  },
+
+  paintTriangleOnGuide: function (/*{[startX:startX], [startY:startY], bottomLength:bottomLength, heightLength:heightLength, bottomLength:bottomLength, color:color, [loopTime:loopTime]}*/) {
+    var self = this;
+    var startX = Math.ceil(arguments[0].startX/(self.dotR*2)) || 0,
+        startY = Math.ceil(arguments[0].startY/(self.dotR*2)) || 0,
+        bottomLength = Math.ceil(arguments[0].bottomLength/(self.dotR*2)),
+        heightLength = Math.ceil(arguments[0].heightLength/(self.dotR*2)),
+        color = arguments[0].color,
+        loopTime = arguments[0].loopTime || 1;
+
+    //四角を計算して、底辺(1)・左上(2)・右上(3)を描画
+
+    //底辺(1)の描画
+    var timerId1 = [],
+        //左下
+        x1 = startX,
+        y1 = startY+heightLength,
+        cnt1 = x1,
+        cntMax1 = startX + bottomLength,
+        gx1,gx2;
+    function paint1() {
+      x1++;
+      gx1 = Math.ceil(x1);
+      gy1 = Math.ceil(y1);
+      if(!isNaN(gx1) && !isNaN(gy1) && gx1 > -1 && gy1 > -1 && gx1 < self.guide.length && gy1 < self.guide[0].length){
+        self.drawDot(self.guide[gx1][gy1].x,self.guide[gx1][gy1].y,self.dotR,color);
+      }
+
+      cnt1 = x1;
+      if(cnt1 < cntMax1) {
+        timerId1.push(setTimeout(paint1,loopTime));
+      } else {
+        do{clearTimeout(timerId1.shift());}while(timerId1.length > 0);
+      }
+    }
+
+    //右上(3)の描画
+    var timerId2 = [],
+        //左下
+        x2 = startX,
+        y2 = startY+heightLength,
+        cnt2 = x2,
+        cntMax2 = startX + (bottomLength/2);
+    //Y=aX+bのaとbを計算
+    var a2 = -heightLength/(bottomLength/2),
+        b2 = -a2*x2+y2;//yとxがスタート位置にある場合のbを求める
+    function paint2() {
+      x2++;
+      y2 = a2 * x2 + b2;
+      gx2 = Math.ceil(x2);
+      gy2 = Math.ceil(y2);
+      if(!isNaN(gx2) && !isNaN(gy2) && gx2 > -2 && gy2 > -2 && gx2 < self.guide.length && gy2 < self.guide[0].length){
+        self.drawDot(self.guide[gx2][gy2].x,self.guide[gx2][gy2].y,self.dotR,color);
+      }
+
+      cnt2 = x2;
+      if(cnt2 < cntMax2) {
+        timerId2.push(setTimeout(paint2,loopTime));
+      } else {
+        do{clearTimeout(timerId2.shift());}while(timerId2.length > 0);
+      }
+    }
+
+    //右上(3)の描画
+    var timerId3 = [],
+        //左下
+        x3 = startX+(bottomLength/2),
+        y3 = startY,
+        cnt3 = x3,
+        cntMax3 = startX + bottomLength;
+    //Y=aX+bのaとbを計算
+    var a3 = heightLength/(bottomLength/2),
+        b3 = -a3*x3+y3;//yとxがスタート位置にある場合のbを求める
+    function paint3() {
+      x3++;
+      y3 = a3 * x3 + b3;
+      gx3 = Math.ceil(x3);
+      gy3 = Math.ceil(y3);
+      if(!isNaN(gx3) && !isNaN(gy3) && gx3 > -3 && gy3 > -3 && gx3 < self.guide.length && gy3 < self.guide[0].length){
+        self.drawDot(self.guide[gx3][gy3].x,self.guide[gx3][gy3].y,self.dotR,color);
+      }
+
+      cnt3 = x3;
+      if(cnt3 < cntMax3) {
+        timerId3.push(setTimeout(paint3,loopTime));
+      } else {
+        do{clearTimeout(timerId3.shift());}while(timerId3.length > 0);
+      }
+    }
+    
+    paint1();
+    paint2();
+    paint3();
+  }
+
 }
 
 
